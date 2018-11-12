@@ -6,4 +6,4 @@ Members :
           Mohammad Javad Ahmadi
           Mohammad Hossein Amini
           Amir Hamidi
-          Seyed Reza Hashemi (*)
+          Seyed Reza Hashemi
