@@ -16,7 +16,7 @@ import os
 # --- Constants ---
 SPRITE_SCALING_PLAYER = 0.5
 SPRITE_SCALING_COIN = 0.2
-COIN_COUNT = 3
+COIN_COUNT = 12
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 600
@@ -72,7 +72,7 @@ class MyGame(arcade.Window):
 
             # Create the coin instance
             # Coin image from kenney.nl
-            coin = arcade.Sprite("images/coin_01.png", SPRITE_SCALING_COIN)
+            coin = arcade.Sprite("images/pic%d"%(i+1) + ".jpg", SPRITE_SCALING_COIN)
 
             # Position the coin
             coin.center_x = random.randrange(SCREEN_WIDTH)
@@ -106,8 +106,8 @@ class MyGame(arcade.Window):
         
         
         for coin in self.coin_list:
-            coin.center_x += 1
-           # coin.center_y += random.random()
+           # coin.center_x += 1
+            coin.center_y += 1
             
             if coin.center_x > SCREEN_WIDTH:
                 coin.center_x -= SCREEN_WIDTH
