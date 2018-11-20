@@ -16,9 +16,9 @@ import os
 # --- Constants ---
 SPRITE_SCALING_PLAYER = 0.5
 SPRITE_SCALING_COIN = 0.2
-COIN_COUNT = 100
+COIN_COUNT = 3
 
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 600
 
 
@@ -103,6 +103,21 @@ class MyGame(arcade.Window):
 
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
+        
+        
+        for coin in self.coin_list:
+            coin.center_x += 1
+           # coin.center_y += random.random()
+            
+            if coin.center_x > SCREEN_WIDTH:
+                coin.center_x -= SCREEN_WIDTH
+        
+            if coin.center_y > SCREEN_HEIGHT:
+                coin.center_y -= SCREEN_HEIGHT
+                
+                
+        #self.coin_list[1].center_x += 1
+        
         self.coin_list.update()
 
         # Generate a list of all sprites that collided with the player.
