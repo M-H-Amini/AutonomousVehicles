@@ -12,6 +12,7 @@ python -m arcade.examples.sprite_collect_coins
 import random
 import arcade
 import os
+import numpy as np
 
 # --- Constants ---
 SPRITE_SCALING_PLAYER = 0.5
@@ -21,7 +22,13 @@ COIN_COUNT = 12
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 600
 
-
+class Car(arcade.Sprite):
+    def __init__(self,filename,scale):
+        arcade.Sprite.__init__(self,filename,scale)
+        self.x_direction=random.random()*2-1
+        self.y_direction=random.random()*2-1
+        self.speed=random.random()*10
+        
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
 
@@ -72,7 +79,7 @@ class MyGame(arcade.Window):
 
             # Create the coin instance
             # Coin image from kenney.nl
-            coin = arcade.Sprite("images/pic%d"%(i+1) + ".jpg", SPRITE_SCALING_COIN)
+            coin = Car("images/pic%d"%(i+1) + ".jpg", SPRITE_SCALING_COIN)
 
             # Position the coin
             coin.center_x = random.randrange(SCREEN_WIDTH)
@@ -106,9 +113,18 @@ class MyGame(arcade.Window):
         
         
         for coin in self.coin_list:
-           # coin.center_x += 1
-            coin.center_y += 1
+            coin.center_x += coin.speed*coin.x_direction
+            coin.center_y += coin.speed*coin.y_direction
             
+            coin.angle=0
+            if coin.x_direction<0:
+                coin.angle=180
+            if coin.x_direction==0:
+                coin.angle=0
+            else:
+                coin.angle+=np.arctan(coin.y_direction/coin.x_direction)*180/np.pi-90
+                
+                
             if coin.center_x > SCREEN_WIDTH:
                 coin.center_x -= SCREEN_WIDTH
         
