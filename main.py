@@ -17,10 +17,10 @@ import numpy as np
 # --- Constants ---
 SPRITE_SCALING_PLAYER = 0.5
 SPRITE_SCALING_COIN = 0.1
-COIN_COUNT = 12
+COIN_COUNT = 1
 
 SCREEN_WIDTH = 1024
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 960
 
 class Car(arcade.Sprite):
     def __init__(self,filename,scale):
@@ -91,6 +91,9 @@ class MyGame(arcade.Window):
     def on_draw(self):
         """ Draw everything """
         arcade.start_render()
+        texture = arcade.load_texture("images/street1.jpg")
+        arcade.draw_texture_rectangle(SCREEN_HEIGHT/2, SCREEN_WIDTH/2,SCREEN_WIDTH,
+                              SCREEN_HEIGHT, texture, 0)
         self.coin_list.draw()
         self.player_list.draw()
 
@@ -105,17 +108,41 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = x
         self.player_sprite.center_y = y
 
+    ##  Find pixels around a car in a given radius...
+    def around(self,center,radius):
+        result=[]
+        for i in range(0,360,5):
+            result.append([int(center[0]+radius*np.cos(i*180/np.pi)),int(center[1]+radius*np.sin(i*180/np.pi))])
+            print(i)
+        print('len{}'.format(len(result)))
+        #print(result)
+        return result
+    
+    def coinSensor(self,center):
+        radius10=self.around(center,10)
+        radius20=self.around(center,20)
+        radius10.extend(radius20)
+        for i in radius10:
+            #print('iiiiiiiii={}'.format(i))
+            point=arcade.draw_commands.get_pixel(i[0],i[1])
+            if point!=(255,255,255):
+                print('Coooooooooooooooooooooooooool')
+                arcade.draw_circle_outline(point[0], point[1], 20, arcade.color.WISTERIA, 8)
+                print(center)
+                print(i)
+                print(point)
+                break
+    
+    
     def update(self, delta_time):
         """ Movement and game logic """
 
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         
-        
         for coin in self.coin_list:
             coin.center_x += coin.speed*coin.x_direction
             coin.center_y += coin.speed*coin.y_direction
-            
             coin.angle=0
             if coin.x_direction<0:
                 coin.angle=180
@@ -130,7 +157,10 @@ class MyGame(arcade.Window):
         
             if coin.center_y > SCREEN_HEIGHT:
                 coin.center_y -= SCREEN_HEIGHT
-                
+            #aaa=self.around([coin.center_x,coin.center_y],10)
+            self.coinSensor([coin.center_x,coin.center_y])
+        #my_point=arcade.draw_commands.get_pixel(100,100)
+        
                 
         #self.coin_list[1].center_x += 1
         
