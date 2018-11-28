@@ -16,7 +16,7 @@ import numpy as np
 
 # --- Constants ---
 SPRITE_SCALING_PLAYER = 0.5
-SPRITE_SCALING_COIN = 0.1
+SPRITE_SCALING_COIN = 0.05
 COIN_COUNT = 1
 
 SCREEN_WIDTH = 1024
@@ -28,6 +28,7 @@ class Car(arcade.Sprite):
         self.x_direction=random.random()*2-1
         self.y_direction=random.random()*2-1
         self.speed=random.random()*10
+        
         
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
@@ -82,9 +83,12 @@ class MyGame(arcade.Window):
             coin = Car("images/pic%d"%(i+1) + ".jpg", SPRITE_SCALING_COIN)
 
             # Position the coin
+            '''
             coin.center_x = random.randrange(SCREEN_WIDTH)
             coin.center_y = random.randrange(SCREEN_HEIGHT)
-
+            '''
+            coin.center_x = 750
+            coin.center_y = 1500
             # Add the coin to the lists
             self.coin_list.append(coin)
 
@@ -113,20 +117,21 @@ class MyGame(arcade.Window):
         result=[]
         for i in range(0,360,5):
             result.append([int(center[0]+radius*np.cos(i*180/np.pi)),int(center[1]+radius*np.sin(i*180/np.pi))])
-            print(i)
-        print('len{}'.format(len(result)))
+            #print(i)
+        #print('len{}'.format(len(result)))
         #print(result)
         return result
     
-    def coinSensor(self,center):
-        radius10=self.around(center,10)
-        radius20=self.around(center,20)
+    def coinSensor(self,car,center):
+        radius10=self.around(center,50)
+        radius20=self.around(center,70)
         radius10.extend(radius20)
         for i in radius10:
             #print('iiiiiiiii={}'.format(i))
             point=arcade.draw_commands.get_pixel(i[0],i[1])
             if point!=(255,255,255):
                 print('Coooooooooooooooooooooooooool')
+                car.speed*=-1
                 arcade.draw_circle_outline(point[0], point[1], 20, arcade.color.WISTERIA, 8)
                 print(center)
                 print(i)
@@ -141,25 +146,27 @@ class MyGame(arcade.Window):
         # example though.)
         
         for coin in self.coin_list:
-            coin.center_x += coin.speed*coin.x_direction
-            coin.center_y += coin.speed*coin.y_direction
-            coin.angle=0
-            if coin.x_direction<0:
-                coin.angle=180
-            if coin.x_direction==0:
+            #print('speed{}'.format(coin.speed))
+            if 1:#coin.speed!=0:
+                coin.center_x += coin.speed*coin.x_direction
+                coin.center_y += coin.speed*coin.y_direction
                 coin.angle=0
-            else:
-                coin.angle+=np.arctan(coin.y_direction/coin.x_direction)*180/np.pi-90
-                
-                
-            if coin.center_x > SCREEN_WIDTH:
-                coin.center_x -= SCREEN_WIDTH
-        
-            if coin.center_y > SCREEN_HEIGHT:
-                coin.center_y -= SCREEN_HEIGHT
-            #aaa=self.around([coin.center_x,coin.center_y],10)
-            self.coinSensor([coin.center_x,coin.center_y])
-        #my_point=arcade.draw_commands.get_pixel(100,100)
+                if coin.x_direction<0:
+                    coin.angle=180
+                if coin.x_direction==0:
+                    coin.angle=0
+                else:
+                    coin.angle+=np.arctan(coin.y_direction/coin.x_direction)*180/np.pi-90
+                    
+                    
+                if coin.center_x > SCREEN_WIDTH:
+                    coin.center_x -= SCREEN_WIDTH
+            
+                if coin.center_y > SCREEN_HEIGHT:
+                    coin.center_y -= SCREEN_HEIGHT
+                #aaa=self.around([coin.center_x,coin.center_y],10)
+                self.coinSensor(coin,[coin.center_x,coin.center_y])
+            #my_point=arcade.draw_commands.get_pixel(100,100)
         
                 
         #self.coin_list[1].center_x += 1
