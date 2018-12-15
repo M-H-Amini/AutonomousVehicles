@@ -87,7 +87,7 @@ class MyGame(arcade.Window):
             coin.center_x = random.randrange(SCREEN_WIDTH)
             coin.center_y = random.randrange(SCREEN_HEIGHT)
             '''
-            coin.center_x = 750
+            coin.center_x = 370
             coin.center_y = 1500
             # Add the coin to the lists
             self.coin_list.append(coin)
@@ -102,7 +102,7 @@ class MyGame(arcade.Window):
         self.player_list.draw()
 
         # Put the text on the screen.
-        output = f"Score: {self.score}"
+        output = "Score: {}".format(self.score)
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
 
     def on_mouse_motion(self, x, y, dx, dy):
@@ -115,7 +115,7 @@ class MyGame(arcade.Window):
     ##  Find pixels around a car in a given radius...
     def around(self,center,radius):
         result=[]
-        for i in range(0,360,5):
+        for i in range(0,360,10):
             result.append([int(center[0]+radius*np.cos(i*180/np.pi)),int(center[1]+radius*np.sin(i*180/np.pi))])
             #print(i)
         #print('len{}'.format(len(result)))
@@ -123,16 +123,22 @@ class MyGame(arcade.Window):
         return result
     
     def coinSensor(self,car,center):
-        radius10=self.around(center,50)
-        radius20=self.around(center,70)
+        radius10=self.around(center,70)
+        radius20=self.around(center,75)
         radius10.extend(radius20)
         for i in radius10:
-            #print('iiiiiiiii={}'.format(i))
             point=arcade.draw_commands.get_pixel(i[0],i[1])
             if point!=(255,255,255):
                 print('Coooooooooooooooooooooooooool')
-                car.speed*=-1
-                arcade.draw_circle_outline(point[0], point[1], 20, arcade.color.WISTERIA, 8)
+                #car.speed*=-1
+                #temp=car.x_direction
+                #car.x_direction=-car.y_direction
+                #car.y_direction=temp
+                car.center_x=370
+                car.center_y=1500
+                car.x_direction=random.random()*2-1
+                car.y_direction=random.random()*2-1
+                #arcade.draw_circle_outline(point[0], point[1], 20, arcade.color.WISTERIA, 8)
                 print(center)
                 print(i)
                 print(point)
